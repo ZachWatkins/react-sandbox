@@ -1,0 +1,46 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"editor.formatOnSave": true
+	},
+	"tasks": {
+		"version": "2.0.0",
+		"tasks": [
+			{
+				"label": "npm: start",
+				"type": "npm",
+				"script": "start",
+				"problemMatcher": [],
+				"group": {
+					"kind": "build",
+					"isDefault": true
+				}
+			},
+			{
+				"label": "npm: test",
+				"type": "npm",
+				"script": "test",
+				"problemMatcher": [],
+				"group": "test"
+			},
+			{
+				"label": "npm: run lint",
+				"type": "npm",
+				"script": "run lint",
+				"problemMatcher": [],
+				"group": "test"
+			},
+			{
+				"label": "npm: run build",
+				"type": "npm",
+				"script": "run build",
+				"problemMatcher": [],
+				"group": "build"
+			}
+		]
+	}
+}
