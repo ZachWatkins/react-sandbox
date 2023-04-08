@@ -1,41 +1,48 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useCounter } from './hooks/useCounter'
 import './App.css'
-import Link from './Components/Link'
-import {UserContext, Provider as UserContextProvider} from './Components/UserContext'
+import { SessionProvider, useSession } from './components/SessionContext'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const { count, increment } = useCounter();
 
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-        <UserContextProvider value={{name: 'John Doe'}}>
-          <UserContext.Consumer>
-            <Link page="https://google.com?s=vitejs+getting+started">Google: "{name}"</Link>
-          </UserContext.Consumer>
-        </UserContextProvider>
+    <SessionProvider>
+      <div className="App">
+        <header className="App-header">
+          <p>Hello Vite + React!</p>
+          <p>
+            <button
+              type="button"
+              onClick={increment}
+            >
+              count is: {count}
+            </button>
+          </p>
+          <p>
+            Edit <code>App.tsx</code> and save to test HMR updates.
+          </p>
+          <p>
+            <a
+              className="App-link"
+              href="https://reactjs.org"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Learn React
+            </a>
+            {' | '}
+            <a
+              className="App-link"
+              href="https://vitejs.dev/guide/features.html"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Vite Docs
+            </a>
+          </p>
+        </header>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
+    </SessionProvider>
   )
 }
 
