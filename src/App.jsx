@@ -1,9 +1,12 @@
 import { useCounter } from './hooks/useCounter'
 import './App.css'
-import { SessionProvider, useSession } from './components/SessionContext'
+import { SessionProvider } from './components/SessionContext'
 
+/**
+ *
+ */
 function App() {
-  const { count, increment } = useCounter();
+  const { count, increment } = useCounter()
 
   return (
     <SessionProvider>
@@ -19,7 +22,7 @@ function App() {
             </button>
           </p>
           <p>
-            Edit <code>App.tsx</code> and save to test HMR updates.
+            Edit <code>App.jsx</code> and save to test HMR updates.
           </p>
           <p>
             <a
