@@ -14,7 +14,7 @@ module.exports = defineConfig({
     'eslint:recommended',
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
-    'plugin:jsx-a11y/recommended',
+    'plugin:jsx-a11y/strict',
     'plugin:jsdoc/recommended',
   ],
   ignorePatterns: ['node_modules/', 'dist/', 'build/'],
@@ -29,9 +29,14 @@ module.exports = defineConfig({
   env: {
     browser: true,
     node: true,
-    es2017: true,
+    es2018: true,
     commonjs: true,
     jest: true,
+  },
+  settings: {
+    react: {
+      version: 'detect',
+    },
   },
   rules: {
     indent: ['error', 2],

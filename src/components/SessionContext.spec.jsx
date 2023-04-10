@@ -2,6 +2,7 @@ import React from 'react'
 import { render, userEvent } from '../utils/test-utils'
 import { SessionProvider, useSession } from './SessionContext'
 import { describe, expect, it } from 'vitest'
+import { PropTypes } from 'prop-types'
 
 describe('SessionProvider', () => {
   const TestComponent = ({ id }) => {
@@ -25,6 +26,9 @@ describe('SessionProvider', () => {
         <input type="text" id={`color-input-${id}`} value={session.color} onChange={handleColorChange} />
       </div>
     )
+  }
+  TestComponent.propTypes = {
+    id: PropTypes.string.isRequired,
   }
 
   it('wraps child components', () => {
