@@ -34,7 +34,7 @@
     "[markdown]": {
         "editor.defaultFormatter": "dbaeumer.vscode-eslint",
         "files.trimTrailingWhitespace": false,
-    },
+		"vite.autoStart": false,
 	},
 	"tasks": {
 		"version": "2.0.0",
