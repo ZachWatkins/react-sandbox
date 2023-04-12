@@ -70,5 +70,11 @@
 				"group": "build"
 			}
 		]
+	},
+	"extensions": {
+		"recommendations": [
+			"antfu.vite",
+			"dbaeumer.vscode-eslint"
+		]
 	}
 }
