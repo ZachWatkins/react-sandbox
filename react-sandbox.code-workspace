@@ -22,18 +22,17 @@
 			"html",
 		],
 		"eslint.run": "onSave",
-		"[javascript,javascriptreact,json]": {
+		"[javascript,javascriptreact,json,html,markdown]": {
 			"editor.defaultFormatter": "dbaeumer.vscode-eslint"
 		},
 		"[html]": {
-			"editor.defaultFormatter": "dbaeumer.vscode-eslint",
 			"editor.codeActionsOnSave": {
 				"source.fixAll.eslint": false
 			}
 		},
     "[markdown]": {
-        "editor.defaultFormatter": "dbaeumer.vscode-eslint",
-        "files.trimTrailingWhitespace": false,
+			"files.trimTrailingWhitespace": false,
+		},
 		"vite.autoStart": false,
 	},
 	"tasks": {
