@@ -7,11 +7,11 @@
 /**
  * Construct a new localStorage item interface.
  *
- * @param key
+ * @param {string} key
  */
 export function LocalStorageItem(key = '') {
   const state = {
-    key: String(namespace),
+    key: String(key),
     full: false,
     bytes: 0,
   }
