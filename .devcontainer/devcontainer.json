@@ -1,7 +1,7 @@
 {
-  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node",
   "hostRequirements": {
-    "cpus": 4
+    "cpus": 2
   },
   "waitFor": "onCreateCommand",
   "updateContentCommand": "npm install",
@@ -9,51 +9,28 @@
   "postAttachCommand": {
     "server": "npm start"
   },
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {
+      "enabled": true
+    },
+    "ghcr.io/devcontainers-contrib/features/act-asdf:2": {
+      "enabled": true
+    },
+    "ghcr.io/devcontainers/features/github-cli:1": {
+      "enabled": true
+    }
+  },
   "customizations": {
     "codespaces": {
       "openFiles": [
-        "src/App.js"
+        "src/App.jsx"
       ]
     },
     "vscode": {
-      "settings": {
-        "[javascript,javascriptreact,json,html,markdown]": {
-          "editor.defaultFormatter": "dbaeumer.vscode-eslint",
-          "files.trimTrailingWhitespace": true,
-          "editor.tabSize": 2,
-          "editor.formatOnSave": true,
-          "editor.codeActionsOnSave": {
-            "source.fixAll.eslint": true
-          },
-          "javascript.validate.enable": false,
-          "eslint.experimental.useFlatConfig": true,
-          "eslint.debug": true,
-          "eslint.enable": true,
-          "eslint.format.enable": true,
-          "eslint.lintTask.enable": true,
-          "eslint.validate": [
-            "javascript",
-            "javascriptreact",
-            "html"
-          ],
-          "eslint.run": "onSave",
-          "vite.autoStart": false
-        },
-        "[html]": {
-          "editor.codeActionsOnSave": {
-            "source.fixAll.eslint": false
-          }
-        },
-        "[markdown]": {
-          "files.trimTrailingWhitespace": false
-        }
-      },
       "extensions": [
-        "streetsidesoftware.code-spell-checker",
         "antfu.browse-lite",
         "antfu.vite",
         "dbaeumer.vscode-eslint",
-        "GitHub.copilot-nightly",
         "wesbos.theme-cobalt2"
       ]
     }
