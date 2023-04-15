@@ -2,7 +2,7 @@
  * Helper function to get the resolved type of a value.
  *
  * @param {any} value - The value to test.
- * @returns {string}
+ * @returns {string} The type of the value.
  */
 function typeOf(value) {
     const result = typeof value
@@ -18,9 +18,9 @@ function typeOf(value) {
  *
  * @param  {any}       value   - The value to test.
  * @param  {...string} allowed - The allowed types.
- * @returns {boolean}
+ * @returns {boolean} True if the type is allowed.
  */
-function typeIs(value, ...allowed) {
+export function typeIs(value, ...allowed) {
     return 0 > allowed.indexOf(typeOf(value)) ? false : true
 }
 
@@ -29,10 +29,10 @@ function typeIs(value, ...allowed) {
  *
  * @param {any}   data   - The source of returned values.
  * @param {any[]} select - One or more values.
- * @returns {object}
+ * @returns {object} A new object with the selected values.
  */
-function reduce(data, select) {
-    return select.reduce(function (previousValue, key, index) {
+export function reduce(data, select) {
+    return select.reduce(function (previousValue, key) {
         previousValue[key] = data[key]
         return previousValue
     }, {})
@@ -44,7 +44,7 @@ function reduce(data, select) {
  * @param {object}  target  - The object to modify.
  * @param {object}  source  - The values assigned.
  */
-function typedAssign(target, source) {
+export function typedAssign(target, source) {
     if (undefined === source) return
     const keys = Object.keys(target)
     for (let i = 0; i < keys.length; i++) {
@@ -62,7 +62,7 @@ function typedAssign(target, source) {
  * @param {object}  target  - The object to modify.
  * @param {object}  source  - The values assigned.
  */
-function typedCopy(target, source) {
+export function typedCopy(target, source) {
     if (undefined === source) return
     const keys = Object.keys(target)
     for (let i = 0; i < keys.length; i++) {
@@ -80,9 +80,9 @@ function typedCopy(target, source) {
  * @param {object} source  - An object with values to copy.
  * @param {object} dest    - An object to receive values.
  * @param {number} [depth] - The depth of properties handled in the previous call.
- * @returns {object}
+ * @returns {object} The destination object.
  */
-function applyPropsRecursive(source, dest, depth) {
+export function applyPropsRecursive(source, dest, depth) {
     depth = undefined === depth ? 0 : depth + 1
     if (depth > 3) return source
     const keys = Object.keys(source)
@@ -103,9 +103,9 @@ function applyPropsRecursive(source, dest, depth) {
  *
  * @param  {object}   obj    - The object to clone.
  * @param  {string[]} ignore - One or more properties to ignore.
- * @returns {object}
+ * @returns {object} A new object with the same properties as the source.
  */
-function copyReducedObject(obj, ignore) {
+export function copyReducedObject(obj, ignore) {
     if (!ignore) ignore = []
     const shape = {}
     for (const prop in obj) {
@@ -122,22 +122,23 @@ function copyReducedObject(obj, ignore) {
 /**
  * Get an array of method names for a given object.
  *
- * @param {object} source
- * @returns {string[]}
+ * @param {object} source - The object to evaluate.
+ * @returns {string[]} An array of method names.
  */
-function listMethods(source) {
+export function listMethods(source) {
     return Object.keys(source).filter(function (key) {
         return typeof source[key] === 'function'
     })
 }
 
 /**
+ * Get an array of property names for a given object.
  *
- * @param target
- * @param source
- * @param allowed
+ * @param {object} target - The object to evaluate.
+ * @param {object} source - The object to evaluate.
+ * @returns {string[]} An array of property names.
  */
-function listProperties(target, source, allowed) {
+export function listProperties(target, source) {
     return Object.keys(source).filter(function (key) {
         return typeof source[key] !== 'function'
     })
@@ -148,8 +149,9 @@ function listProperties(target, source, allowed) {
  *
  * @param {object}   target - The method source.
  * @param {string[]} props  - The property names to evaluate. If undefined, evaluates all own properties.
+ * @returns {object} An object containing `[method]: true` key values.
  */
-function methodsObject(target, props) {
+export function methodsObject(target, props) {
     const results = {}
     for (let index = 0; index < props.length; index++) {
         const prop = props[index]
@@ -161,52 +163,54 @@ function methodsObject(target, props) {
 }
 
 /**
+ * Create an object containing `[property]: true` key values for target object's properties.
  *
- * @param source
- * @param tag
+ * @param {object} source - The property source.
+ * @param {string} tag - The property name to evaluate.
+ * @returns {boolean} True if the type is allowed.
  */
-function matched(source, tag) {
+export function matched(source, tag) {
     return this[tag] === source[tag]
 }
+
 /**
+ * Create an object containing `[property]: true` key values for target object's properties.
  *
- * @param source
- * @param tag
+ * @param {object} source - The property source.
+ * @param {string} tag - The property name to evaluate.
+ * @returns {boolean} True if the type is allowed.
  */
 function unmatched(source, tag) {
     return this[tag] !== source[tag]
 }
 /**
+ * Assign a property to this object using a source object and property name.
  *
- * @param source
- * @param tag
+ * @param {object} source - The property source.
+ * @param {string} tag - The property name to evaluate.
  */
 function tag(source, tag) {
     this[tag] = source[tag]
 }
+
 /**
+ * Apply object properties from a source to a destination.
  *
- * @param source
- * @param item
+ * @param {object} source - An object with values to copy.
+ * @param {object} item - An object to receive values.
  */
-function tagsApplied(source, item) {
-    return source.every(matched, item)
-}
-/**
- *
- * @param source
- * @param item
- */
-function applyTags(source, item) {
+export function applyTags(source, item) {
     source.filter(unmatched, item).forEach(tag, item)
 }
+
 /**
+ * Conditionally apply tags from a source object to an item using a condition.
  *
- * @param source
- * @param condition
- * @param item
+ * @param {object} source - An object with values to copy.
+ * @param {Function} condition - A function that returns true if the tags should be applied.
+ * @param {object} item - An object to receive values.
  */
-function applyTagsIf(source, condition, item) {
+export function applyTagsIf(source, condition, item) {
     if (condition(item, source)) {
         source.filter(unmatched, item).forEach(tag, item)
     }
@@ -236,7 +240,7 @@ export function objectsShareOnePrimitiveRecursive(full, sparse) {
  * Clone object properties deeply.
  *
  * @param {any} source - An object with values to copy.
- * @returns {any | object}
+ * @returns {any | object} A new object with the same properties as the source.
  */
 export function cloneObjectRecursive(source) {
     const type = {}.toString.call(source).slice(8, -1)
