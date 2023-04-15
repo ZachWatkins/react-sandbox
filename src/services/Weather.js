@@ -17,17 +17,21 @@ const API = {
 }
 
 /**
+ * @typedef {object} PointsResponseItem
+ * @property {object} properties - The properties of the point.
+ * @property {object} properties.relativeLocation - The relative location of the point.
+ * @property {object} properties.relativeLocation.geometry - The geometry of the relative location.
+ * @property {number[]} properties.relativeLocation.geometry.coordinates - The latitude and longitude of the relative location.
+ * @property {string} properties.gridId - The grid ID of the point.
+ * @property {number} properties.gridX - The grid X coordinate of the point.
+ * @property {number} properties.gridY - The grid Y coordinate of the point.
+ */
+
+/**
  * A point on the map.
  *
  * @typedef {object} Point
- * @param {object} response - The response object of an API call for the point.
- * @param {object} response.properties - The properties of the point.
- * @param {object} response.properties.relativeLocation - The relative location of the point.
- * @param {object} response.properties.relativeLocation.geometry - The geometry of the relative location.
- * @param {number[]} response.properties.relativeLocation.geometry.coordinates - The latitude and longitude of the relative location.
- * @param {string} response.properties.gridId - The grid ID of the point.
- * @param {number} response.properties.gridX - The grid X coordinate of the point.
- * @param {number} response.properties.gridY - The grid Y coordinate of the point.
+ * @param {PointsResponseItem} item - The response object of an API call for the point.
  * @property {number} latitude - The latitude of the point.
  * @property {number} longitude - The longitude of the point.
  * @property {string} gridId - The grid ID of the point.
