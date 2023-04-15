@@ -17,67 +17,67 @@ const jsxAlly = require('eslint-plugin-jsx-a11y')
 const jsdoc = require('eslint-plugin-jsdoc')
 
 const MyConfig = {
-  files: ['**/*.{js,mjs,cjs,jsx,mjsx,ts,tsx,mtsx}', '*.js'],
-  ignores: ['node_modules/', 'dist/', 'build/'],
-  plugins: {
-    jsdoc,
-    react,
-    'react-hooks': reactHooks,
-    'jsx-a11y': jsxAlly,
-  },
-  languageOptions: {
-    parserOptions: {
-      sourceType: 'module',
-      ecmaVersion: 2018,
-      ecmaFeatures: {
-        jsx: true,
-      },
+    files: ['**/*.{js,mjs,cjs,jsx,mjsx,ts,tsx,mtsx}', '*.js'],
+    ignores: ['node_modules/', 'dist/', 'build/'],
+    plugins: {
+        jsdoc,
+        react,
+        'react-hooks': reactHooks,
+        'jsx-a11y': jsxAlly,
     },
-    globals: {
-      ...globals.serviceworker,
-      ...globals.browser,
-      ...globals.node,
-      ...globals.es2018,
-      ...globals.commonjs,
+    languageOptions: {
+        parserOptions: {
+            sourceType: 'module',
+            ecmaVersion: 2018,
+            ecmaFeatures: {
+                jsx: true,
+            },
+        },
+        globals: {
+            ...globals.serviceworker,
+            ...globals.browser,
+            ...globals.node,
+            ...globals.es2018,
+            ...globals.commonjs,
+        },
     },
-  },
-  settings: {
-    react: {
-      version: 'detect',
+    settings: {
+        react: {
+            version: 'detect',
+        },
     },
-  },
-  rules: {
-    ...js.configs.recommended.rules,
-    ...jsdoc.configs.recommended.rules,
-    ...reactRecommended.rules,
-    ...reactHooks.configs.recommended.rules,
-    ...jsxAlly.configs.strict.rules,
-    indent: ['error', 2],
-    quotes: ['error', 'single'],
-    semi: ['error', 'never'],
-    'prefer-const': 'error',
-    'react/prop-types': 'off',
-    'react/display-name': 'off',
-    'react/react-in-jsx-scope': 'off',
-    'react-hooks/rules-of-hooks': 'error',
-    'react-hooks/exhaustive-deps': 'warn',
-    'comma-dangle': ['error', 'always-multiline'],
-  },
+    rules: {
+        ...js.configs.recommended.rules,
+        ...jsdoc.configs.recommended.rules,
+        ...reactRecommended.rules,
+        ...reactHooks.configs.recommended.rules,
+        ...jsxAlly.configs.strict.rules,
+        indent: ['error', 4],
+        quotes: ['error', 'single'],
+        semi: ['error', 'never'],
+        'prefer-const': 'error',
+        'react/prop-types': 'off',
+        'react/display-name': 'off',
+        'react/react-in-jsx-scope': 'off',
+        'react-hooks/rules-of-hooks': 'error',
+        'react-hooks/exhaustive-deps': 'warn',
+        'comma-dangle': ['error', 'always-multiline'],
+    },
 }
 
 const MyTestConfig = {
-  files: ['**/*.{test,spec}.{js,jsx}'],
-  languageOptions: {
-    globals: {
-      ...globals.jest,
+    files: ['**/*.{test,spec}.{js,jsx}'],
+    languageOptions: {
+        globals: {
+            ...globals.jest,
+        },
     },
-  },
 }
 
 module.exports = defineFlatConfig([
-  {
-    ignores: ['node_modules/', 'dist/', 'build/'],
-  },
-  MyConfig,
-  MyTestConfig,
+    {
+        ignores: ['node_modules/', 'dist/', 'build/'],
+    },
+    MyConfig,
+    MyTestConfig,
 ])
