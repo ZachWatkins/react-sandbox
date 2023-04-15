@@ -5,12 +5,12 @@
  * @returns {string}
  */
 function typeOf(value) {
-  const result = typeof value
-  if ('object' !== result) return result
-  const return_value = Object.prototype.toString.call(value)
-  return return_value
-    .substring(return_value.indexOf(' ') + 1, return_value.indexOf(']'))
-    .toLowerCase()
+    const result = typeof value
+    if ('object' !== result) return result
+    const return_value = Object.prototype.toString.call(value)
+    return return_value
+        .substring(return_value.indexOf(' ') + 1, return_value.indexOf(']'))
+        .toLowerCase()
 }
 
 /**
@@ -21,7 +21,7 @@ function typeOf(value) {
  * @returns {boolean}
  */
 function typeIs(value, ...allowed) {
-  return 0 > allowed.indexOf(typeOf(value)) ? false : true
+    return 0 > allowed.indexOf(typeOf(value)) ? false : true
 }
 
 /**
@@ -32,10 +32,10 @@ function typeIs(value, ...allowed) {
  * @returns {object}
  */
 function reduce(data, select) {
-  return select.reduce(function (previousValue, key, index) {
-    previousValue[key] = data[key]
-    return previousValue
-  }, {})
+    return select.reduce(function (previousValue, key, index) {
+        previousValue[key] = data[key]
+        return previousValue
+    }, {})
 }
 
 /**
@@ -45,15 +45,15 @@ function reduce(data, select) {
  * @param {object}  source  - The values assigned.
  */
 function typedAssign(target, source) {
-  if (undefined === source) return
-  const keys = Object.keys(target)
-  for (let i = 0; i < keys.length; i++) {
-    const key = keys[i]
-    const value = source[key]
-    if (typeOf(target[key]) === typeOf(value)) {
-      target[key] = value
+    if (undefined === source) return
+    const keys = Object.keys(target)
+    for (let i = 0; i < keys.length; i++) {
+        const key = keys[i]
+        const value = source[key]
+        if (typeOf(target[key]) === typeOf(value)) {
+            target[key] = value
+        }
     }
-  }
 }
 
 /**
@@ -63,15 +63,15 @@ function typedAssign(target, source) {
  * @param {object}  source  - The values assigned.
  */
 function typedCopy(target, source) {
-  if (undefined === source) return
-  const keys = Object.keys(target)
-  for (let i = 0; i < keys.length; i++) {
-    const key = keys[i]
-    const value = source[key]
-    if (typeOf(target[key]) === typeOf(value)) {
-      target[key] = value
+    if (undefined === source) return
+    const keys = Object.keys(target)
+    for (let i = 0; i < keys.length; i++) {
+        const key = keys[i]
+        const value = source[key]
+        if (typeOf(target[key]) === typeOf(value)) {
+            target[key] = value
+        }
     }
-  }
 }
 
 /**
@@ -83,19 +83,19 @@ function typedCopy(target, source) {
  * @returns {object}
  */
 function applyPropsRecursive(source, dest, depth) {
-  depth = undefined === depth ? 0 : depth + 1
-  if (depth > 3) return source
-  const keys = Object.keys(source)
-  for (let i = 0; i < keys.length; i++) {
-    const key = keys[i]
-    const value = source[key]
-    if (typeof value !== 'object' || Array.isArray(value)) {
-      dest[key] = source[key]
-    } else {
-      applyPropsRecursive(source[key], dest[key], depth)
+    depth = undefined === depth ? 0 : depth + 1
+    if (depth > 3) return source
+    const keys = Object.keys(source)
+    for (let i = 0; i < keys.length; i++) {
+        const key = keys[i]
+        const value = source[key]
+        if (typeof value !== 'object' || Array.isArray(value)) {
+            dest[key] = source[key]
+        } else {
+            applyPropsRecursive(source[key], dest[key], depth)
+        }
     }
-  }
-  return dest
+    return dest
 }
 
 /**
@@ -106,17 +106,17 @@ function applyPropsRecursive(source, dest, depth) {
  * @returns {object}
  */
 function copyReducedObject(obj, ignore) {
-  if (!ignore) ignore = []
-  const shape = {}
-  for (const prop in obj) {
-    if (
-      typeof obj[prop] !== 'function' &&
+    if (!ignore) ignore = []
+    const shape = {}
+    for (const prop in obj) {
+        if (
+            typeof obj[prop] !== 'function' &&
       (!ignore.length || 0 > ignore.indexOf(prop))
-    ) {
-      shape[prop] = undefined
+        ) {
+            shape[prop] = undefined
+        }
     }
-  }
-  return shape
+    return shape
 }
 
 /**
@@ -126,9 +126,9 @@ function copyReducedObject(obj, ignore) {
  * @returns {string[]}
  */
 function listMethods(source) {
-  return Object.keys(source).filter(function (key) {
-    return typeof source[key] === 'function'
-  })
+    return Object.keys(source).filter(function (key) {
+        return typeof source[key] === 'function'
+    })
 }
 
 /**
@@ -138,9 +138,9 @@ function listMethods(source) {
  * @param allowed
  */
 function listProperties(target, source, allowed) {
-  return Object.keys(source).filter(function (key) {
-    return typeof source[key] !== 'function'
-  })
+    return Object.keys(source).filter(function (key) {
+        return typeof source[key] !== 'function'
+    })
 }
 
 /**
@@ -150,14 +150,14 @@ function listProperties(target, source, allowed) {
  * @param {string[]} props  - The property names to evaluate. If undefined, evaluates all own properties.
  */
 function methodsObject(target, props) {
-  const results = {}
-  for (let index = 0; index < props.length; index++) {
-    const prop = props[index]
-    if (typeof target[prop] === 'function') {
-      results[prop] = true
+    const results = {}
+    for (let index = 0; index < props.length; index++) {
+        const prop = props[index]
+        if (typeof target[prop] === 'function') {
+            results[prop] = true
+        }
     }
-  }
-  return results
+    return results
 }
 
 /**
@@ -166,7 +166,7 @@ function methodsObject(target, props) {
  * @param tag
  */
 function matched(source, tag) {
-  return this[tag] === source[tag]
+    return this[tag] === source[tag]
 }
 /**
  *
@@ -174,7 +174,7 @@ function matched(source, tag) {
  * @param tag
  */
 function unmatched(source, tag) {
-  return this[tag] !== source[tag]
+    return this[tag] !== source[tag]
 }
 /**
  *
@@ -182,7 +182,7 @@ function unmatched(source, tag) {
  * @param tag
  */
 function tag(source, tag) {
-  this[tag] = source[tag]
+    this[tag] = source[tag]
 }
 /**
  *
@@ -190,7 +190,7 @@ function tag(source, tag) {
  * @param item
  */
 function tagsApplied(source, item) {
-  return source.every(matched, item)
+    return source.every(matched, item)
 }
 /**
  *
@@ -198,7 +198,7 @@ function tagsApplied(source, item) {
  * @param item
  */
 function applyTags(source, item) {
-  source.filter(unmatched, item).forEach(tag, item)
+    source.filter(unmatched, item).forEach(tag, item)
 }
 /**
  *
@@ -207,9 +207,9 @@ function applyTags(source, item) {
  * @param item
  */
 function applyTagsIf(source, condition, item) {
-  if (condition(item, source)) {
-    source.filter(unmatched, item).forEach(tag, item)
-  }
+    if (condition(item, source)) {
+        source.filter(unmatched, item).forEach(tag, item)
+    }
 }
 
 /**
@@ -220,16 +220,16 @@ function applyTagsIf(source, condition, item) {
  * @returns {boolean} True if any property used, false otherwise.
  */
 export function objectsShareOnePrimitiveRecursive(full, sparse) {
-  const keys = Object.getOwnPropertyNames(full)
-  for (let i = 0; i < keys.length; i++) {
-    const key = keys[i]
-    if (typeof sparse[key] === 'object') {
-      return objectsShareOnePrimitiveRecursive(full[key], sparse[key])
-    } else if (sparse[key]) {
-      return true
+    const keys = Object.getOwnPropertyNames(full)
+    for (let i = 0; i < keys.length; i++) {
+        const key = keys[i]
+        if (typeof sparse[key] === 'object') {
+            return objectsShareOnePrimitiveRecursive(full[key], sparse[key])
+        } else if (sparse[key]) {
+            return true
+        }
     }
-  }
-  return false
+    return false
 }
 
 /**
@@ -239,28 +239,28 @@ export function objectsShareOnePrimitiveRecursive(full, sparse) {
  * @returns {any | object}
  */
 export function cloneObjectRecursive(source) {
-  const type = {}.toString.call(source).slice(8, -1)
-  if (type !== 'Array' && type !== 'Object') {
-    return source
-  }
-  if (type === 'Set') {
-    return new Set([...source].map(value => cloneObjectRecursive(value)))
-  }
-  if (type === 'Map') {
-    return new Map(
-      [...source].map(kv => [
-        cloneObjectRecursive(kv[0]),
-        cloneObjectRecursive(kv[1]),
-      ]),
-    )
-  }
-  if (type === 'Date') {
-    return new Date(source.getTime())
-  }
-  let dest = {}
-  dest = Array.isArray(source) ? [] : {}
-  for (var key in source) {
-    dest[key] = cloneObjectRecursive(source[key])
-  }
-  return dest
+    const type = {}.toString.call(source).slice(8, -1)
+    if (type !== 'Array' && type !== 'Object') {
+        return source
+    }
+    if (type === 'Set') {
+        return new Set([...source].map(value => cloneObjectRecursive(value)))
+    }
+    if (type === 'Map') {
+        return new Map(
+            [...source].map(kv => [
+                cloneObjectRecursive(kv[0]),
+                cloneObjectRecursive(kv[1]),
+            ]),
+        )
+    }
+    if (type === 'Date') {
+        return new Date(source.getTime())
+    }
+    let dest = {}
+    dest = Array.isArray(source) ? [] : {}
+    for (var key in source) {
+        dest[key] = cloneObjectRecursive(source[key])
+    }
+    return dest
 }

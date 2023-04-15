@@ -68,6 +68,7 @@ const fromJSON = json => {
  * @returns {object} The session state.
  */
 const State = function(props) {
+    if (typeof props === 'object') return mergeValidPropsRecursive(props, SessionState)
     if (props === null) {
         props = localStorage.getItem(Key)
         if (props === null) {

@@ -7,7 +7,7 @@
  * @param {object} source - Object to proxy.
  */
 function proxyMethod(proxy, key, source) {
-  proxy[key] = source[key]
+    proxy[key] = source[key]
 }
 
 /**
@@ -19,15 +19,15 @@ function proxyMethod(proxy, key, source) {
  * @param {object} source - Object to proxy.
  */
 function proxyProp(proxy, key, source) {
-  Object.defineProperty(proxy, key, {
-    get: function () {
-      return source[key]
-    },
-    set: function (value) {
-      source[key] = value
-    },
-    enumerable: true,
-  })
+    Object.defineProperty(proxy, key, {
+        get: function () {
+            return source[key]
+        },
+        set: function (value) {
+            source[key] = value
+        },
+        enumerable: true,
+    })
 }
 
 /**
@@ -37,22 +37,22 @@ function proxyProp(proxy, key, source) {
  * @param {string[]} keys   - Names of the properties and methods available to the proxy. Accepts dot notation and the result by keeping the rightmost name.
  */
 export function ProxyObject(source, keys) {
-  for (let i = 0; i < keys.length; i++) {
-    const key = keys[i]
-    if (typeof source[key] === 'function') {
-      this[key] = source[key].bind(source)
-    } else {
-      Object.defineProperty(this, key, {
-        get: function () {
-          return source[key]
-        },
-        set: function (value) {
-          source[key] = value
-        },
-        enumerable: true,
-      })
+    for (let i = 0; i < keys.length; i++) {
+        const key = keys[i]
+        if (typeof source[key] === 'function') {
+            this[key] = source[key].bind(source)
+        } else {
+            Object.defineProperty(this, key, {
+                get: function () {
+                    return source[key]
+                },
+                set: function (value) {
+                    source[key] = value
+                },
+                enumerable: true,
+            })
+        }
     }
-  }
 }
 
 /**
@@ -62,46 +62,46 @@ export function ProxyObject(source, keys) {
  * @param {string[]} keys   - Names of the properties and methods available to the proxy. Accepts dot notation and the result by keeping the rightmost name.
  */
 export function ProxyObjectDeep(source, keys) {
-  for (let i = 0; i < keys.length; i++) {
-    const key = keys[i]
-    if (typeof this[key] === 'function') {
-      this[key] = source[key].bind(source)
-    } else if (0 > key.indexOf('.')) {
-      Object.defineProperty(this, key, {
-        get: function () {
-          return source[key]
-        },
-        set: function (value) {
-          source[key] = value
-        },
-        enumerable: true,
-      })
-    } else {
-      // Using dot notation.
-      const steps = key.split('.')
-      if (steps.length < 3) {
-        Object.defineProperty(this, steps[1], {
-          get: function () {
-            return source[steps[0]][steps[1]]
-          },
-          set: function (value) {
-            source[steps[0]][steps[1]] = value
-          },
-          enumerable: true,
-        })
-      } else if (steps.length < 4) {
-        Object.defineProperty(this, steps[2], {
-          get: function () {
-            return source[steps[0]][steps[1]][steps[2]]
-          },
-          set: function (value) {
-            source[steps[0]][steps[1]][steps[2]] = value
-          },
-          enumerable: true,
-        })
-      }
+    for (let i = 0; i < keys.length; i++) {
+        const key = keys[i]
+        if (typeof this[key] === 'function') {
+            this[key] = source[key].bind(source)
+        } else if (0 > key.indexOf('.')) {
+            Object.defineProperty(this, key, {
+                get: function () {
+                    return source[key]
+                },
+                set: function (value) {
+                    source[key] = value
+                },
+                enumerable: true,
+            })
+        } else {
+            // Using dot notation.
+            const steps = key.split('.')
+            if (steps.length < 3) {
+                Object.defineProperty(this, steps[1], {
+                    get: function () {
+                        return source[steps[0]][steps[1]]
+                    },
+                    set: function (value) {
+                        source[steps[0]][steps[1]] = value
+                    },
+                    enumerable: true,
+                })
+            } else if (steps.length < 4) {
+                Object.defineProperty(this, steps[2], {
+                    get: function () {
+                        return source[steps[0]][steps[1]][steps[2]]
+                    },
+                    set: function (value) {
+                        source[steps[0]][steps[1]][steps[2]] = value
+                    },
+                    enumerable: true,
+                })
+            }
+        }
     }
-  }
 }
 
 /**
@@ -111,8 +111,8 @@ export function ProxyObjectDeep(source, keys) {
  * @returns {ProxyObject} A proxy object representing the parent object.
  */
 export function HasProxy(...props) {
-  const keys = props || Object.keys(this)
-  return new ProxyObject(this, keys)
+    const keys = props || Object.keys(this)
+    return new ProxyObject(this, keys)
 }
 
 /**
@@ -122,8 +122,8 @@ export function HasProxy(...props) {
  * @returns {ProxyObject} A proxy object representing the parent object.
  */
 export function HasProxyDeep(...props) {
-  const keys = props || Object.keys(this)
-  return new ProxyObjectDeep(this, keys)
+    const keys = props || Object.keys(this)
+    return new ProxyObjectDeep(this, keys)
 }
 
 export default ProxyObject
