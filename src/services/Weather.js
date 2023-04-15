@@ -9,16 +9,11 @@
  * https://www.weather.gov/documentation/services-web-api
  */
 const API = {
-  url: 'https://api.weather.gov',
-  demo: {
-    latitude: 39.7456,
-    longitude: -97.0892,
-  },
-}
-
-export const initialWeatherState = {
-  latitude: NaN,
-  longitude: NaN,
+    url: 'https://api.weather.gov',
+    demo: {
+        latitude: 39.7456,
+        longitude: -97.0892,
+    },
 }
 
 /**
@@ -41,15 +36,15 @@ export const initialWeatherState = {
  * @property {string} forecastURL - The URL of the forecast for the point.
  */
 const Point = function({properties}) {
-  this.latitude = properties.relativeLocation.geometry.coordinates[0]
-  this.longitude = properties.relativeLocation.geometry.coordinates[1]
-  this.gridId = properties.gridId // Office.
-  this.gridX = properties.gridX
-  this.gridY = properties.gridY
-  this.forecastURL = properties.forecast
+    this.latitude = properties.relativeLocation.geometry.coordinates[0]
+    this.longitude = properties.relativeLocation.geometry.coordinates[1]
+    this.gridId = properties.gridId // Office.
+    this.gridX = properties.gridX
+    this.gridY = properties.gridY
+    this.forecastURL = properties.forecast
 }
 Point.url = function(latitude, longitude) {
-  return `${API.url}/points/${latitude},${longitude}`
+    return `${API.url}/points/${latitude},${longitude}`
 }
 
 /**
@@ -71,22 +66,26 @@ Point.url = function(latitude, longitude) {
  * @property {string} detailedForecast - The detailed forecast of the period.
  */
 const ForecastPeriod = function(period) {
-  this.name = period.name
-  this.temperature = period.temperature
-  this.temperatureUnit = period.temperatureUnit
-  this.icon = period.icon
-  this.shortForecast = period.shortForecast
-  this.detailedForecast = period.detailedForecast
+    this.name = period.name
+    this.temperature = period.temperature
+    this.temperatureUnit = period.temperatureUnit
+    this.icon = period.icon
+    this.shortForecast = period.shortForecast
+    this.detailedForecast = period.detailedForecast
 }
 
-const Weather = (pointResponse, forecastResponse) => {
-  const point = new Point(pointResponse)
-  const forecastTonight = new ForecastPeriod(forecastResponse.properties.periods[0])
-  return {
-    updated: forecastResponse.properties.updated,
-    ...point,
-    ...forecastTonight,
-  }
+export const Weather = (pointResponse, forecastResponse) => {
+    const point = new Point(pointResponse)
+    const forecastTonight = new ForecastPeriod(forecastResponse.properties.periods[0])
+    return {
+        updated: forecastResponse.properties.updated,
+        ...point,
+        ...forecastTonight,
+    }
+}
+Weather.initialState = {
+    latitude: NaN,
+    longitude: NaN,
 }
 
 /**
@@ -98,14 +97,15 @@ const Weather = (pointResponse, forecastResponse) => {
  * @returns {Promise<number>} A promise that resolves to the temperature in degrees Celsius.
  */
 export const fetchWeather = async (latitude, longitude) => {
-  if (!latitude && !longitude) {
-    latitude = API.demo.latitude
-    longitude = API.demo.longitude
-  }
-  const pointURL = Point.url(latitude, longitude)
-  const pointResponse = await fetch(pointURL).then(response => response.json())
-  const forecastResponse = await fetch(pointResponse.properties.forecast).then(response => response.json())
-  return new Weather(pointResponse, forecastResponse)
+    if (!latitude && !longitude) {
+        latitude = API.demo.latitude
+        longitude = API.demo.longitude
+    }
+    const pointURL = Point.url(latitude, longitude)
+    const pointResponse = await fetch(pointURL).then(response => response.json())
+    const forecastResponse = await fetch(pointResponse.properties.forecast).then(response => response.json())
+    return new Weather(pointResponse, forecastResponse)
 }
+fetchWeather.initialState = {...Weather.initialState}
 
-export default {fetchWeather, initialWeatherState}
+export default {fetchWeather}
