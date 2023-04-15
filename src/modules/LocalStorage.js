@@ -97,4 +97,21 @@ LocalStorageItem.prototype = {
   },
 }
 
+/**
+ * Helper function for parsing a stored object or returning a default value.
+ *
+ * @param {string} key - The key to use when retrieving the object from localStorage.
+ * @param {object} initial - The initial value to return if the object is not found.
+ * @returns {object} The parsed object or the initial value.
+ */
+export function parseStoredObject (key, initial = {}) {
+  try {
+    const stored = localStorage.getItem(key)
+    if (stored === null) return initial
+    return JSON.parse(stored)
+  } catch (error) {
+    return initial
+  }
+}
+
 export default LocalStorageItem

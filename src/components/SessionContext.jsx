@@ -1,32 +1,65 @@
 import React from 'react'
+import {fetchWeather, initialWeatherState} from '../services/Weather'
 
-const DEFAULT_SESSION = { collections: {} }
-const parseStoredObject = function(key, initial = '{}') {
+const parseObject = json => {
   try {
-    return JSON.parse(localStorage.getItem(key) || initial)
+    const result = JSON.parse(json)
+    if (typeof result === 'object') {
+      return result
+    }
   } catch (error) {
-    return JSON.parse(initial)
+    // Ignore.
   }
-}
-const sessionClient = {
-  updateSession: function(session, updates) {
-    return Promise.resolve({ ...session, ...updates })
-  },
 }
 
 /**
  * Create a new Session state object.
  *
- * @param {object} [props] - The session properties as JSON or an object.
+ * @param {object|string} [props] - The session properties as an object or as JSON.
+ * @param {object[]} [props.choices] - Choices made during the session.
+ * @param {object} [props.weather] - Weather data for the session.
+ * @returns {object} The new session state.
  */
-function Session(props) {
-  if (props === undefined) {
-    props = parseStoredObject(this.name)
+const Session = function(props) {
+  if (typeof props === 'string') {
+    props = parseObject(props)
   }
-  Object.assign(this, props)
-  localStorage.setItem(this.name, JSON.stringify(this))
+  const state = {...this.initialState, ...props}
+  localStorage.setItem(this.key, JSON.stringify(state))
+  return state
 }
-Session.prototype = DEFAULT_SESSION
+Session.key = 'Session'
+Session.initialState = {
+  choices: [],
+  weather: initialWeatherState,
+}
+Session.Restore = function() {
+  const state = this.initialState
+  try {
+    let stored = localStorage.getItem(this.key)
+    if (stored !== null && stored.length) {
+      stored = JSON.parse(stored)
+      if (typeof stored === 'object') {
+        Object.assign(state, stored)
+      }
+    }
+  } catch (error) {
+    // Ignore storage due to parsing error.
+  }
+  return state
+}
+Session.RestoreAsync = async function(state) {
+  state.weather = await fetchWeather()
+}
+
+/**
+ * HTTP requests related to the Session.
+ */
+const SessionClient = {
+  updateSession: function(session, updates) {
+    return Promise.resolve({ ...session, ...updates })
+  },
+}
 
 const SessionContext = React.createContext()
 
@@ -42,9 +75,9 @@ const SessionContext = React.createContext()
 function sessionReducer(state, action) {
   switch (action.type) {
   case 'update':
-    return new Session(Object.assign(state, action.payload))
+    return new Session({...state, ...action.payload})
   case 'reset':
-    return new Session(DEFAULT_SESSION)
+    return new Session({})
   default:
     throw new Error(`Unhandled action type: ${action.type}`)
   }
@@ -64,9 +97,7 @@ function sessionReducer(state, action) {
  * ```
  */
 function SessionProvider({ children }) {
-  const [state, dispatch] = React.useReducer(sessionReducer, DEFAULT_SESSION)
-  // NOTE: you *might* need to memoize this value
-  // Learn more in http://kcd.im/optimize-context
+  const [state, dispatch] = React.useReducer(sessionReducer, Session.Restore())
   const value = { session: state, dispatchSession: dispatch }
   return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>
 }
@@ -100,12 +131,12 @@ function useSession() {
  * @example `const [{session, status, error}, sessionDispatch] = useSession();`
  */
 async function updateSession(dispatch, session, updates) {
-  dispatch({ type: 'update:start', payload: updates })
+  dispatch({ type: 'start update', payload: updates })
   try {
-    const updatedSession = await sessionClient.updateSession(session, updates)
-    dispatch({ type: 'update:finish', payload: updatedSession })
+    const updatedSession = await SessionClient.updateSession(session, updates)
+    dispatch({ type: 'finish update', payload: updatedSession })
   } catch (error) {
-    dispatch({ type: 'update:error', payload: error })
+    dispatch({ type: 'fail update', payload: error })
   }
 }
 
