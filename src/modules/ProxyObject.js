@@ -126,4 +126,4 @@ export function HasProxyDeep(...props) {
     return new ProxyObjectDeep(this, keys)
 }
 
-export default ProxyObject
+export default {ProxyObject, ProxyObjectDeep, HasProxy, HasProxyDeep, proxyMethod, proxyProp}

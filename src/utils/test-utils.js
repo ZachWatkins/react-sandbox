@@ -1,4 +1,3 @@
-/* eslint-disable import/export */
 import { cleanup, render } from '@testing-library/react'
 import { afterEach } from 'vitest'
 
@@ -7,9 +6,11 @@ afterEach(() => {
 })
 
 /**
+ * Custom render function to wrap providers.
  *
- * @param ui
- * @param options
+ * @param {any} ui - The UI to render.
+ * @param {object} [options] - The options to pass to the render function.
+ * @returns {object} The render result.
  */
 function customRender (ui, options = {}) {
     return render(ui, {

@@ -1,5 +1,8 @@
-//@ts-check
-/** Now in seconds UST since epoch. */
+/**
+ * Now in seconds UST since epoch.
+ *
+ * @returns {number} - The number of seconds since epoch.
+ */
 export function now() {
     return Math.round(Date.now() / 1000)
 }

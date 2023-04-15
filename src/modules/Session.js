@@ -54,12 +54,6 @@ const mergeValidPropsRecursive = (props, defaults) => {
     return result
 }
 
-const fromJSON = json => {
-    const state = parseObjectOrIgnore(json)
-    if (state === undefined) return SessionState
-    return mergeValidPropsRecursive(state, SessionState)
-}
-
 /**
  * Selects the session state from an object or a JSON version of an object.
  * Returns an object merged from the default session state and the given properties.
