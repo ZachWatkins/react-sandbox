@@ -80,15 +80,6 @@ const State = function(props) {
 }
 
 /**
- * HTTP requests related to the Session.
- */
-const SessionClient = {
-    updateSession: function(session, updates) {
-        return Promise.resolve({ ...session, ...updates })
-    },
-}
-
-/**
  * Create a new Session state object.
  *
  * @param {object|string|null} [props] - The session state as an object or a JSON object string. If null then the session is restored from localStorage.
