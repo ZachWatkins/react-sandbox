@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    "streetsidesoftware.code-spell-checker",
+    "antfu.browse-lite",
+    "antfu.vite",
+    "dbaeumer.vscode-eslint",
+    "GitHub.copilot-nightly",
+    "wesbos.theme-cobalt2",
+    "EditorConfig.EditorConfig",
+  ]
+}
