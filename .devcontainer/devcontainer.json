@@ -5,7 +5,11 @@
   },
   "waitFor": "onCreateCommand",
   "updateContentCommand": "npm install",
-  "postCreateCommand": "",
+  "remoteUser": "node",
+  "mounts": [
+    "source=React-Template-Volume-node_modules,target=${containerWorkspaceFolder}/node_modules,type=volume",
+  ],
+  "postCreateCommand": "sudo chown node node_modules",
   "postAttachCommand": {
     "server": "npm start"
   },
