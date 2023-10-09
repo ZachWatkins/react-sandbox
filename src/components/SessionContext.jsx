@@ -1,5 +1,5 @@
 import React from 'react'
-import {Session} from '../modules/Session'
+import {Session, fetchSessionState} from '../modules/Session'
 
 const SessionContext = React.createContext()
 
@@ -16,6 +16,8 @@ const SessionContext = React.createContext()
 function sessionReducer(state, action) {
     switch (action.type) {
     case 'update':
+        return new Session({...state, ...action.payload})
+    case 'sync':
         return new Session({...state, ...action.payload})
     case 'reset':
         return new Session({})
@@ -39,7 +41,11 @@ function sessionReducer(state, action) {
  */
 function SessionProvider({ children }) {
     const [state, dispatch] = React.useReducer(sessionReducer, Session.restore() || Session.initialState)
-    const value = { session: state, dispatchSession: dispatch }
+    const value = {
+        session: state,
+        dispatchSession: dispatch,
+        fetchSession: fetchSessionState,
+    }
     return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>
 }
 
@@ -63,22 +69,4 @@ function useSession() {
     return context
 }
 
-/**
- * A hook for updating the session asynchronously.
- *
- * @param {Function} dispatch - The dispatch function from the useSession hook.
- * @param {object} session - The current session state.
- * @param {any} updates - The updates to apply to the session.
- * @example `const [{session, status, error}, sessionDispatch] = useSession();`
- */
-async function updateSession(dispatch, session, updates) {
-    dispatch({ type: 'start update', payload: updates })
-    try {
-        const updatedSession = await SessionClient.updateSession(session, updates)
-        dispatch({ type: 'finish update', payload: updatedSession })
-    } catch (error) {
-        dispatch({ type: 'fail update', payload: error })
-    }
-}
-
-export { SessionProvider, useSession, updateSession }
+export { SessionProvider, useSession }

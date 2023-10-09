@@ -7,18 +7,15 @@
  * @license MIT
  */
 import {fetchWeather} from '../services/Weather'
-const Key = 'Session'
-const SessionState = {
+const KEY = 'Session'
+const INITIAL_STATE = {
     choices: [],
     weather: fetchWeather.initialState,
 }
-const toJSON = state => {
-    return {
-        choices: state.choices,
-    }
-}
-const applyAsyncState = async (state) => {
-    state.weather = await fetchWeather(state.weather)
+export const fetchSessionState = async (state) => {
+    const newWeather = await fetchWeather(state.weather)
+    console.log('new state', {...state, weather: newWeather})
+    return {...state, weather: {...newWeather}}
 }
 
 // You do not need to edit below this line to modify the tracked session state properties.
@@ -40,15 +37,13 @@ const parseObjectOrIgnore = json => {
     }
 }
 
-const mergeValidPropsRecursive = (props, defaults) => {
+const mergePropsRecursive = (props, defaults) => {
     const result = {}
     for (const key in defaults) {
         if (typeof defaults[key] === 'object') {
-            result[key] = mergeValidPropsRecursive(props[key], defaults[key])
+            result[key] = mergePropsRecursive(props[key], defaults[key])
         } else {
-            result[key] = typeof props[key] === typeof defaults[key]
-                ? props[key]
-                : defaults[key]
+            result[key] = props[key]
         }
     }
     return result
@@ -61,17 +56,19 @@ const mergeValidPropsRecursive = (props, defaults) => {
  * @param {object|string} [props] - The object or JSON version of an object.
  * @returns {object} The session state.
  */
-const State = function(props) {
-    if (typeof props === 'object') return mergeValidPropsRecursive(props, SessionState)
+const State = function(props = null) {
     if (props === null) {
-        props = localStorage.getItem(Key)
+        props = localStorage.getItem(KEY)
         if (props === null) {
-            return {...SessionState}
+            return {...INITIAL_STATE}
         }
     }
-    if (typeof props === 'string') props = parseObjectOrIgnore(props)
-    if (typeof props !== 'object') return SessionState
-    return mergeValidPropsRecursive(props, SessionState)
+
+    if (typeof props === 'string') {
+        props = parseObjectOrIgnore(props)
+    }
+
+    return mergePropsRecursive(props, INITIAL_STATE)
 }
 
 /**
@@ -80,14 +77,15 @@ const State = function(props) {
  * @param {object|string|null} [props] - The session state as an object or a JSON object string. If null then the session is restored from localStorage.
  */
 export const Session = function(props) {
-    Object.assign(this, State(props))
-    localStorage.setItem(Key, JSON.stringify(toJSON(this)))
+    const initialState = State(props)
+    console.log('New Session state', initialState)
+    this.getInitialState = () => initialState
+    Object.assign(this, initialState)
+    localStorage.setItem(KEY, JSON.stringify(this))
+    if (!props) {
+        fetchSessionState(this).then(() => localStorage.setItem(KEY, JSON.stringify(this)))
+    }
 }
-Session.prototype = {
-    ...SessionState,
-    sync: async function() {
-        await applyAsyncState(this)
-    },
-}
+Session.restore = () => new Session()
 
 export default Session

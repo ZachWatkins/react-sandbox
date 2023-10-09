@@ -1,9 +1,13 @@
+import React from 'react'
 import { useCounter } from './hooks/useCounter'
 import './App.css'
 import { SessionProvider } from './components/SessionContext'
+import CurrentWeather from './components/CurrentWeather'
 
 /**
+ * The App component.
  *
+ * @returns {React.ReactElement} The App component.
  */
 function App() {
     const { count, increment } = useCounter()
@@ -21,6 +25,7 @@ function App() {
               count is: {count}
                         </button>
                     </p>
+                    <CurrentWeather />
                     <p>
             Edit <code>App.jsx</code> and save to test HMR updates.
                     </p>

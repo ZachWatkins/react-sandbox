@@ -30,26 +30,24 @@ const API = {
 /**
  * A point on the map.
  *
- * @typedef {object} Point
- * @param {PointsResponseItem} item - The response object of an API call for the point.
- * @property {number} latitude - The latitude of the point.
- * @property {number} longitude - The longitude of the point.
- * @property {string} gridId - The grid ID of the point.
- * @property {number} gridX - The grid X coordinate of the point.
- * @property {number} gridY - The grid Y coordinate of the point.
- * @property {string} forecastURL - The URL of the forecast for the point.
+ * @param {object} properties - The properties of the point.
+ * @param {object} properties.relativeLocation - The relative location of the point.
+ * @param {number} properties.gridId - The grid ID of the point.
+ * @param {number} properties.gridX - The grid X coordinate of the point.
+ * @param {number} properties.gridY - The grid Y coordinate of the point.
+ * @param {string} properties.forecast - The URL of the forecast for the point.
  */
-const Point = function({properties}) {
-    this.latitude = properties.relativeLocation.geometry.coordinates[0]
-    this.longitude = properties.relativeLocation.geometry.coordinates[1]
-    this.gridId = properties.gridId // Office.
-    this.gridX = properties.gridX
-    this.gridY = properties.gridY
-    this.forecastURL = properties.forecast
+const Point = function({relativeLocation, gridId, gridX, gridY, forecast}) {
+    if (relativeLocation) {
+        this.latitude = relativeLocation.geometry.coordinates[0]
+        this.longitude = relativeLocation.geometry.coordinates[1]
+    }
+    this.gridId = gridId // Office.
+    this.gridX = gridX
+    this.gridY = gridY
+    this.forecastURL = forecast
 }
-Point.url = function(latitude, longitude) {
-    return `${API.url}/points/${latitude},${longitude}`
-}
+Point.url = (latitude, longitude) => `${API.url}/points/${latitude},${longitude}`
 
 /**
  * A forecast period.
@@ -78,18 +76,22 @@ const ForecastPeriod = function(period) {
     this.detailedForecast = period.detailedForecast
 }
 
-export const Weather = (pointResponse, forecastResponse) => {
-    const point = new Point(pointResponse)
-    const forecastTonight = new ForecastPeriod(forecastResponse.properties.periods[0])
+export const getWeather = (pointResponse, forecastResponse) => {
     return {
+        /** @type {Point} */
+        point: new Point(pointResponse),
+        /** @type {ForecastPeriod} */
+        forecastTonight: new ForecastPeriod(forecastResponse.properties.periods[0]),
+        /** @type {string} */
         updated: forecastResponse.properties.updated,
-        ...point,
-        ...forecastTonight,
     }
 }
-Weather.initialState = {
-    latitude: NaN,
-    longitude: NaN,
+getWeather.initialState = {
+    latitude: 39.7456,
+    longitude: -97.0892,
+    point: new Point({}),
+    forecastTonight: new ForecastPeriod({}),
+    updated: '',
 }
 
 /**
@@ -100,16 +102,22 @@ Weather.initialState = {
  * @param {number} longitude - The longitude of the location.
  * @returns {Promise<number>} A promise that resolves to the temperature in degrees Celsius.
  */
-export const fetchWeather = async (latitude, longitude) => {
+export const fetchWeather = async ({latitude, longitude}) => {
     if (!latitude && !longitude) {
         latitude = API.demo.latitude
         longitude = API.demo.longitude
     }
-    const pointURL = Point.url(latitude, longitude)
-    const pointResponse = await fetch(pointURL).then(response => response.json())
-    const forecastResponse = await fetch(pointResponse.properties.forecast).then(response => response.json())
-    return new Weather(pointResponse, forecastResponse)
+    const pointResponse = await fetch(Point.url(latitude, longitude))
+        .then(response => response.json())
+
+    const forecastResponse = await fetch(pointResponse.properties.forecast)
+        .then(response => response.json())
+
+    console.log(pointResponse, forecastResponse)
+    console.log('getWeather', getWeather(pointResponse, forecastResponse))
+
+    return getWeather(pointResponse, forecastResponse)
 }
-fetchWeather.initialState = {...Weather.initialState}
+fetchWeather.initialState = {...getWeather.initialState}
 
 export default {fetchWeather}
