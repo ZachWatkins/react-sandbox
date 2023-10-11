@@ -1,7 +1,34 @@
 import React from 'react'
-import {Session, fetchSessionState} from '../modules/Session'
+import {fetchWeather} from '../services/Weather'
 
 const SessionContext = React.createContext()
+
+/**
+ * Create a new Session state object.
+ *
+ * @param {object} [props] - The session state.
+ * @param {Array} [props.choices] - The session choices.
+ * @param {object} [props.weather] - The session weather.
+ */
+const Session = function({ choices, weather }) {
+    const initialState = {
+        choices: choices || [],
+        weather: weather || {},
+    }
+    Object.assign(this, initialState)
+    this.getInitialState = () => initialState
+    this.fetchAsyncState = async () => this.weather = await fetchWeather(this.weather)
+
+    localStorage.setItem(Session.key, JSON.stringify(this))
+    this.fetchAsyncState().then(() => localStorage.setItem(Session.key, JSON.stringify(this)))
+}
+Session.key = 'Session'
+Session.restore = () => {
+    if (!localStorage[Session.key]) {
+        return new Session({})
+    }
+    return new Session(JSON.parse(localStorage.getItem(Session.key)))
+}
 
 /**
  * Reducer function for modifying the session state.
