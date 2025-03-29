@@ -38,7 +38,7 @@ LocalStorageItem.prototype = {
         return localStorage.getItem(this.key)
     },
     /**
-     * Retrieve the item from localStorage and parse it be,fore returning the valid.
+     * Retrieve the item from localStorage and parse it before returning the valid data.
      *
      * @returns {any|null} The value of the item, or null if the item does not exist.
      */
